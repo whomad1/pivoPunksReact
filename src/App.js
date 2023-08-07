@@ -1,21 +1,27 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeProvider, createTheme } from "@mui/material";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { themeSettings } from "./theme";
+import MainPage from "./scenes/MainPage";
+import DetailedBeerPage from "./scenes/DetailedBeerPage";
+function App() {
+	const theme = createTheme(themeSettings);
+	return (
+		<div>
+			<BrowserRouter>
+				<ThemeProvider theme={theme}>
+					<CssBaseline />
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
-  }
+					<Routes>
+						<Route path="/" element={<MainPage />} />
+						<Route path="/:id" element={<DetailedBeerPage />} />
+					</Routes>
+				</ThemeProvider>
+			</BrowserRouter>
+		</div>
+	);
 }
 
 export default App;
