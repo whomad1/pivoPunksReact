@@ -2,16 +2,19 @@ import DetailedBeer from "../components/DetailedBeer";
 import Menu from "../components/Menu";
 import Navbar from "../components/Navbar";
 import { Box } from "@mui/material";
-
-export default function DetailedBeerPage() {
+function getIdFromHref() {
 	const url = window.location.href;
-	console.log(url);
-	console.log(url.split("/")[-1]);
+	let id = url.split("/"); // id is an array of 4
+	id = id[id.length - 1].slice(1);
+	return id;
+}
+export default function DetailedBeerPage() {
+	const id = getIdFromHref();
+
 	return (
-		<>
+		<Box minWidth="439px">
 			<Navbar />
-			<DetailedBeer id={1} />
-			{/* get the string after last slash*/}
-		</>
+			<DetailedBeer id={id} />
+		</Box>
 	);
 }

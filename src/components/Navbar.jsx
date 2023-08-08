@@ -9,7 +9,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import SportsBarIcon from "@mui/icons-material/SportsBar";
 import IconButton from "@mui/material/IconButton";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { themeSettings } from "../theme";
 const Search = styled("div")(({ theme }) => ({
 	position: "relative",
 	borderRadius: theme.shape.borderRadius,
@@ -19,7 +19,7 @@ const Search = styled("div")(({ theme }) => ({
 	},
 	marginLeft: 0,
 	width: "100%",
-	[theme.breakpoints.up("sm")]: {
+	[theme.breakpoints.up("xs")]: {
 		marginLeft: theme.spacing(1),
 		width: "auto",
 	},
@@ -43,53 +43,39 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 		paddingLeft: `calc(1em + ${theme.spacing(4)})`,
 		transition: theme.transitions.create("width"),
 		width: "100%",
-		[theme.breakpoints.up("sm")]: {
+		[theme.breakpoints.up("xs")]: {
 			width: "12ch",
 			"&:focus": {
-				width: "20ch",
+				width: "12ch",
 			},
 		},
 	},
 }));
-
+function getRandomInt(max) {
+	return Math.floor(Math.random() * max);
+}
 export default function Navbar() {
-	const [beer, setBeer] = useState();
+	const randomId = getRandomInt(300);
 	const navigate = useNavigate();
-	const getBeer = async () => {
-		try {
-			const response = await fetch("https://api.punkapi.com/v2/beers/random");
-			if (response) {
-				const beer = await response.json();
-				return beer;
-			} else {
-				console.err("failed to fetch random beer");
-				return [];
-			}
-		} catch (err) {
-			console.err("can't get beer");
-			return [];
-		}
-	};
-
-	const handleClick = async () => {
-		setBeer(await getBeer());
-	};
-
-	useEffect(() => {
-		fetch("https://api.punkapi.com/v2/beers/random").then((res) =>
-			res.json().then((data) => setBeer(data))
-		);
-	}, []);
-
 	return (
-		<Box sx={{ flexGrow: 1 }}>
+		<Box minWidth="400px">
 			<AppBar position="static">
 				<Toolbar>
 					<Typography
 						variant="h2"
-						noWrap
 						component="div"
-						sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}>
+						sx={{
+							display: {
+								sm: "block",
+								"&:hover": {
+									color: themeSettings.palette.secondary.main,
+									cursor: "pointer",
+								},
+							},
+						}}
+						onClick={() => {
+							navigate("/");
+						}}>
 						PivoPunk
 					</Typography>
 
@@ -98,8 +84,8 @@ export default function Navbar() {
 						aria-label="show random beer"
 						color="inherit"
 						onClick={() => {
-							handleClick();
-							navigate(`/:${beer[0]["id"]}`); // There is no need to fetch beer only for id, might use a randomizer instead
+							navigate(`/:${randomId}`);
+							navigate(0);
 						}}>
 						<SportsBarIcon />
 					</IconButton>
