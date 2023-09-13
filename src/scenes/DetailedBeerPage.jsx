@@ -1,5 +1,4 @@
 import DetailedBeer from "../components/DetailedBeer";
-import Menu from "../components/Menu";
 import Navbar from "../components/Navbar";
 import { Box } from "@mui/material";
 function getIdFromHref() {

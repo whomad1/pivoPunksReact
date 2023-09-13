@@ -6,11 +6,11 @@ export default function DetailedBeer({ id }) {
 	const [beer, setBeer] = useState(null);
 
 	const getBeer = async () => {
-		console.log(id);
+		// console.log(id);
 		const res = await fetch(`https://api.punkapi.com/v2/beers/${id}`);
 		const data = await res.json();
 		if (data) setBeer(data);
-		else console.log("data:", data);
+		// else console.log("no data in detailed beer:", data);
 	};
 
 	useEffect(() => {

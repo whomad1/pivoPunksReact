@@ -10,6 +10,9 @@ import SportsBarIcon from "@mui/icons-material/SportsBar";
 import IconButton from "@mui/material/IconButton";
 import { useNavigate } from "react-router-dom";
 import { themeSettings } from "../theme";
+import { useState } from "react";
+
+import { useEffect } from "react";
 const Search = styled("div")(({ theme }) => ({
 	position: "relative",
 	borderRadius: theme.shape.borderRadius,
@@ -51,16 +54,42 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 		},
 	},
 }));
+
 function getRandomInt(max) {
 	return Math.floor(Math.random() * max);
 }
+
 export default function Navbar() {
+	const [search, setSearch] = useState(null);
 	const randomId = getRandomInt(300);
 	const navigate = useNavigate();
+	const handleChange = (event) => {
+		event.preventDefault();
+		setSearch(event.target.value);
+	};
+
+	const fetchSearchResult = async () => {
+		if (!search) return null;
+		const filteredSearch = search.split(" ").join("_");
+		const res = await fetch(
+			`https://api.punkapi.com/v2/beers?beer_name=${filteredSearch}&per_page=5`
+		);
+		const data = await res.json();
+		console.log(data);
+	};
+
+	useEffect(() => {
+		try {
+			fetchSearchResult();
+		} catch (err) {
+			console.log(err);
+		}
+	}, [search]);
+
 	return (
 		<Box minWidth="400px">
 			<AppBar position="static">
-				<Toolbar>
+				<Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
 					<Typography
 						variant="h2"
 						component="div"
@@ -90,7 +119,11 @@ export default function Navbar() {
 						<SportsBarIcon />
 					</IconButton>
 
-					<Search>
+					<Search
+						value={search}
+						onChange={(event) => {
+							handleChange(event);
+						}}>
 						<SearchIconWrapper>
 							<SearchIcon />
 						</SearchIconWrapper>
