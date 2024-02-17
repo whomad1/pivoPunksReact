@@ -8,132 +8,121 @@ import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import SportsBarIcon from "@mui/icons-material/SportsBar";
 import IconButton from "@mui/material/IconButton";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { themeSettings } from "../theme";
 import { useState } from "react";
 
 import { useEffect } from "react";
+import { Button } from "@mui/material";
 const Search = styled("div")(({ theme }) => ({
-	position: "relative",
-	borderRadius: theme.shape.borderRadius,
-	backgroundColor: alpha(theme.palette.common.white, 0.15),
-	"&:hover": {
-		backgroundColor: alpha(theme.palette.common.white, 0.25),
-	},
-	marginLeft: 0,
-	width: "100%",
-	[theme.breakpoints.up("xs")]: {
-		marginLeft: theme.spacing(1),
-		width: "auto",
-	},
+  position: "relative",
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  "&:hover": {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  marginLeft: 0,
+  width: "100%",
+  [theme.breakpoints.up("xs")]: {
+    marginLeft: theme.spacing(1),
+    width: "auto",
+  },
 }));
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
-	padding: theme.spacing(0, 2),
-	height: "100%",
-	position: "absolute",
-	pointerEvents: "none",
-	display: "flex",
-	alignItems: "center",
-	justifyContent: "center",
+  padding: theme.spacing(0, 2),
+  height: "100%",
+  position: "absolute",
+  pointerEvents: "none",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-	color: "inherit",
-	"& .MuiInputBase-input": {
-		padding: theme.spacing(1, 1, 1, 0),
-		// vertical padding + font size from searchIcon
-		paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-		transition: theme.transitions.create("width"),
-		width: "100%",
-		[theme.breakpoints.up("xs")]: {
-			width: "12ch",
-			"&:focus": {
-				width: "12ch",
-			},
-		},
-	},
+  color: "inherit",
+  "& .MuiInputBase-input": {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    [theme.breakpoints.up("xs")]: {
+      width: "12ch",
+      "&:focus": {
+        width: "12ch",
+      },
+    },
+  },
 }));
 
-function getRandomInt(max) {
-	return Math.floor(Math.random() * max);
+function getRandomInt(max = 300) {
+  return Math.floor(Math.random() * max);
 }
 
 export default function Navbar() {
-	const [search, setSearch] = useState(null);
-	const randomId = getRandomInt(300);
-	const navigate = useNavigate();
-	const handleChange = (event) => {
-		event.preventDefault();
-		setSearch(event.target.value);
-	};
+  const [search, setSearch] = useState(null);
+  const [randomId, setRandomId] = useState(getRandomInt);
+  const handleChange = (event) => {
+    event.preventDefault();
+    setSearch(event.target.value);
+  };
 
-	const fetchSearchResult = async () => {
-		if (!search) return null;
-		const filteredSearch = search.split(" ").join("_");
-		const res = await fetch(
-			`https://api.punkapi.com/v2/beers?beer_name=${filteredSearch}&per_page=5`
-		);
-		const data = await res.json();
-		console.log(data);
-	};
+  const fetchSearchResult = async () => {
+    if (!search) return null;
+    const filteredSearch = search.split(" ").join("_");
+    const res = await fetch(
+      `https://api.punkapi.com/v2/beers?beer_name=${filteredSearch}&per_page=5`
+    );
+    const data = await res.json();
+  };
 
-	useEffect(() => {
-		try {
-			fetchSearchResult();
-		} catch (err) {
-			console.log(err);
-		}
-	}, [search]);
+  useEffect(() => {
+    try {
+      fetchSearchResult();
+    } catch (err) {
+      console.log(err);
+    }
+  }, [search]);
 
-	return (
-		<Box minWidth="400px">
-			<AppBar position="static">
-				<Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-					<Typography
-						variant="h2"
-						component="div"
-						sx={{
-							display: {
-								sm: "block",
-								"&:hover": {
-									color: themeSettings.palette.secondary.main,
-									cursor: "pointer",
-								},
-							},
-						}}
-						onClick={() => {
-							navigate("/");
-						}}>
-						PivoPunk
-					</Typography>
+  return (
+    <Box minWidth="400px">
+      <AppBar position="static">
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Link to="/">
+            <Button size="large" color="inherit">
+              PivoPunk
+            </Button>
+          </Link>
+          <Link to={`/${randomId}`}>
+            <IconButton
+              size="large"
+              aria-label="show random beer"
+              color="inherit"
+              onClick={() => {
+                setRandomId((randomId) => getRandomInt(300));
+              }}
+            >
+              <SportsBarIcon />
+            </IconButton>
+          </Link>
 
-					<IconButton
-						size="large"
-						aria-label="show random beer"
-						color="inherit"
-						onClick={() => {
-							navigate(`/:${randomId}`);
-							navigate(0);
-						}}>
-						<SportsBarIcon />
-					</IconButton>
-
-					<Search
-						value={search}
-						onChange={(event) => {
-							handleChange(event);
-						}}>
-						<SearchIconWrapper>
-							<SearchIcon />
-						</SearchIconWrapper>
-						<StyledInputBase
-							placeholder="Search…"
-							inputProps={{ "aria-label": "search" }}
-						/>
-					</Search>
-				</Toolbar>
-			</AppBar>
-		</Box>
-	);
+          <Search
+            value={search}
+            onChange={(event) => {
+              handleChange(event);
+            }}
+          >
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Search…"
+              inputProps={{ "aria-label": "search" }}
+            />
+          </Search>
+        </Toolbar>
+      </AppBar>
+    </Box>
+  );
 }

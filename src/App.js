@@ -7,21 +7,19 @@ import { themeSettings } from "./theme";
 import MainPage from "./scenes/MainPage";
 import DetailedBeerPage from "./scenes/DetailedBeerPage";
 function App() {
-	const theme = createTheme(themeSettings);
-	return (
-		<div>
-			<BrowserRouter>
-				<ThemeProvider theme={theme}>
-					<CssBaseline />
+  const theme = createTheme(themeSettings);
+  return (
+    <BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
 
-					<Routes>
-						<Route path="/" element={<MainPage />} />
-						<Route path="/:id" element={<DetailedBeerPage />} />
-					</Routes>
-				</ThemeProvider>
-			</BrowserRouter>
-		</div>
-	);
+        <Routes>
+          <Route path="*" element={<MainPage />} />
+          <Route exact path="/:id" element={<DetailedBeerPage />} />
+        </Routes>
+      </ThemeProvider>
+    </BrowserRouter>
+  );
 }
 
 export default App;
